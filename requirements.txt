@@ -1,0 +1,26 @@
+requests>=2.31.0
+sounddevice>=0.4.6
+soundfile>=0.12.1
+numpy>=1.24.0
+pyautogui>=0.9.54
+pyttsx3>=2.90
+Flask>=3.0.0
+# Offline wake-word ("Hey Nova") recognition
+vosk>=0.3.45
+# Speech-to-text (Google Web Speech API; needs internet). Bilingual en/ur.
+speech_recognition>=3.9.0
+# Voice-over-IP style text-to-speech for Urdu replies (needs internet).
+gtts>=2.5.0
+# Neural, human-sounding Urdu TTS voice (falls back to gtts if unavailable).
+edge-tts>=6.1.0
+# Live web search results (for real spoken answers)
+ddgs>=9.0.0
+# Resolve real YouTube video URLs so "play X" actually plays instead of just
+# opening the search page.
+yt-dlp>=2024.0.0
+# Audio decoding for webm/ogg (no system ffmpeg needed)
+av>=12.0.0
+# Optional nicer TTS voice (needs a model in models/ and piper CLI)
+piper-tts>=1.2.0
+# Optional: faster-whisper (NOTE: crashes on this CPU due to ctranslate2 access violation)
+# faster-whisper>=1.0.0

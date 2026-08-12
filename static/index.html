@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Nova Voice Assistant</h1>
+            <p>Your privacy-respecting AI companion — 100% local &amp; free</p>
+        </header>
+        
+        <main>
+            <div class="sys-banner" id="sys-banner" style="display:none"></div>
+            
+            <div class="orb-container">
+                <div class="orb" id="orb"></div>
+            </div>
+            
+            <div class="controls">
+                <button id="record-btn" class="btn">
+                    <span id="btn-text">Start Listening</span>
+                </button>
+                <div id="status" class="status-text">Idle</div>
+            </div>
+            
+            <div class="chat-container" id="chat-container">
+                <!-- Chat messages will appear here -->
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

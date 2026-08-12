@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Voice Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 3D Orb Visualizer -->
+        <div class="visualizer-container">
+            <div class="orb" id="nova-orb">
+                <div class="orb-core"></div>
+                <div class="orb-ring ring1"></div>
+                <div class="orb-ring ring2"></div>
+                <div class="orb-ring ring3"></div>
+            </div>
+            <div class="status-text" id="status-text">Starting...</div>
+        </div>
+
+        <!-- Settings: LLM provider + language -->
+        <div class="settings-row">
+            <div class="setting-group">
+                <span class="setting-label">LLM</span>
+                <div class="seg-control" id="provider-seg">
+                    <button type="button" class="seg-btn active" data-provider="gemini" onclick="onSetProvider('gemini')">Gemini</button>
+                    <button type="button" class="seg-btn" data-provider="openrouter" onclick="onSetProvider('openrouter')">Online</button>
+                    <button type="button" class="seg-btn" data-provider="ollama" onclick="onSetProvider('ollama')">Ollama</button>
+                </div>
+            </div>
+            <div class="setting-group">
+                <span class="setting-label">Language</span>
+                <div class="seg-control" id="lang-seg">
+                    <button type="button" class="seg-btn active" data-lang="en" onclick="onSetLanguage('en')">English</button>
+                    <button type="button" class="seg-btn" data-lang="ur" onclick="onSetLanguage('ur')">Urdu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat History -->
+        <div class="chat-container" id="chat-container">
+            <!-- Chat messages will be injected here -->
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="push-to-talk" id="talk-btn" onclick="onTalk()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" x2="12" y1="19" y2="22"></line>
+                </svg>
+                Push to Talk
+            </button>
+            <button class="stop-btn" id="stop-btn" onclick="onStop()" style="display:none;">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                    <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+                </svg>
+                Stop
+            </button>
+            <label class="toggle-container">
+                <input type="checkbox" id="wake-toggle" onchange="onWakeToggle(this)">
+                <span class="slider"></span>
+                <span class="toggle-label">Hands-free "Hey Nova"</span>
+            </label>
+        </div>
+
+        <!-- Text input (testing only; voice stays fully enabled) -->
+        <div class="text-input-row">
+            <input type="text" id="text-input" class="text-input" placeholder="Type a message (testing)...">
+            <button type="button" class="send-btn" onclick="onSendText()">Send</button>
+        </div>
+    </div>
+</body>
+</html>
