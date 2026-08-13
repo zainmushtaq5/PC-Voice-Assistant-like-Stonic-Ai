@@ -77,7 +77,7 @@ OPENROUTER_X_TITLE = "Nova Voice Assistant"
 
 # Google Gemini (direct) — a third primary LLM option, independent of OpenRouter/Ollama.
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")  # from https://aistudio.google.com/apikey
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = "gemini-flash-latest"
 
 # If True, Nova logs the full message roles+shape before every LLM call so you can
 # inspect the conversation history (e.g. for tool-call pairing issues).
