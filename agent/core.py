@@ -95,6 +95,13 @@ def _route_intent(text):
     """Return (tool_name, args) for a clearly-recognisable command, else None."""
     t = text.lower().strip()
 
+    # Compound/multi-step commands (e.g. "open chrome and search X", "open
+    # whatsapp and send message to Y") must NOT be hijacked by a single regex
+    # below — let them fall through to the LLM agent loop, which can chain
+    # multiple tool calls together.
+    if re.search(r"\b(and then|,?\s+and\s+\w|\bthen\b)\s", t):
+        return None
+
     # Window-level overview commands must be caught before the looser patterns
     # below (e.g. "show the desktop" would otherwise be read as list_directory).
     if re.search(r"\b(show (?:the )?desktop|go to desktop|show my desktop)\b", t):
