@@ -81,7 +81,7 @@ GEMINI_MODEL = "gemini-2.5-flash"
 
 # If True, Nova logs the full message roles+shape before every LLM call so you can
 # inspect the conversation history (e.g. for tool-call pairing issues).
-DEBUG_LLM = False
+DEBUG_LLM = True
 
 ASSISTANT_NAME = "Nova"
 

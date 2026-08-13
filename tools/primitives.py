@@ -13,16 +13,26 @@ import webbrowser
 def open_url(url: str) -> str:
     """Open any URL in the default browser. Works for websites, Google search
     (https://www.google.com/search?q=...), WhatsApp (https://wa.me/<num>?text=...),
-    and any web link. Puts a tiny amount of smarts into building it if the caller
-    passes a bare site name."""
+    and any web link. If the input isn't a real domain/URL (e.g. a plain search
+    phrase like 'gta 6 minimum requirements'), Google-searches it instead of
+    trying to open it as a broken site."""
+    import urllib.parse
     url = (url or "").strip()
     if not url:
-        return "I need a URL to open."
+        return "I need a URL or search query."
     if not url.startswith(("http://", "https://")):
-        url = "https://" + url
+        # Looks like a real domain (single token, contains a dot, no spaces)?
+        looks_like_domain = (
+            " " not in url and "." in url and
+            re.match(r"^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/.*)?$", url)
+        )
+        if looks_like_domain:
+            url = "https://" + url
+        else:
+            url = "https://www.google.com/search?q=" + urllib.parse.quote(url)
     try:
         if os.name == "nt":
-            os.startfile(url)    # opens the default browser on Windows
+            os.startfile(url)
         else:
             webbrowser.open(url)
         return f"Opened {url}"
