@@ -608,6 +608,36 @@ class Agent:
                         {"function": {"name": name, "arguments": args}}
                         for name, args in parsed_calls
                     ]
+                    # This raw JSON was a tool-call encoding, not a real reply —
+                    # don't let it sit in history as if the assistant "said" it.
+                    # Left uncleaned, this junk text accumulates turn after turn,
+                    # bloating token counts and breaking role-sequencing on some
+                    # backends (e.g. Gemini rejects a trailing malformed turn).
+                    self.messages[-1]["content"] = ""
+                    # This raw JSON was a tool-call encoding, not a real reply —
+                    # don't let it sit in history as if the assistant "said" it.
+                    # Left uncleaned, this junk text accumulates turn after turn,
+                    # bloating token counts and breaking role-sequencing on some
+                    # backends (e.g. Gemini rejects a trailing malformed turn).
+                    self.messages[-1]["content"] = ""
+                    # This raw JSON was a tool-call encoding, not a real reply —
+                    # don't let it sit in history as if the assistant "said" it.
+                    # Left uncleaned, this junk text accumulates turn after turn,
+                    # bloating token counts and breaking role-sequencing on some
+                    # backends (e.g. Gemini rejects a trailing malformed turn).
+                    self.messages[-1]["content"] = ""
+                    # This raw JSON was a tool-call encoding, not a real reply —
+                    # don't let it sit in history as if the assistant "said" it.
+                    # Left uncleaned, this junk text accumulates turn after turn,
+                    # bloating token counts and breaking role-sequencing on some
+                    # backends (e.g. Gemini rejects a trailing malformed turn).
+                    self.messages[-1]["content"] = ""
+                    # This raw JSON was a tool-call encoding, not a real reply —
+                    # don't let it sit in history as if the assistant "said" it.
+                    # Left uncleaned, this junk text accumulates turn after turn,
+                    # bloating token counts and breaking role-sequencing on some
+                    # backends (e.g. Gemini rejects a trailing malformed turn).
+                    self.messages[-1]["content"] = ""
 
             # Blank-response guard: if the model returned nothing (no text AND no
             # tool call), drop the empty assistant message and retry instead of
