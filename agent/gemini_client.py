@@ -86,8 +86,17 @@ def _parse_response(resp):
     try:
         cands = resp.candidates
         if not cands:
+            fb = getattr(resp, "prompt_feedback", None)
+            print(f"[Gemini] No candidates returned. prompt_feedback={fb!r}")
             return "", []
-        parts = cands[0].content.parts
+        cand = cands[0]
+        finish_reason = getattr(cand, "finish_reason", None)
+        if finish_reason and str(finish_reason) not in ("1", "STOP"):
+            print(f"[Gemini] Candidate finish_reason={finish_reason!r} "
+                  f"safety_ratings={getattr(cand, 'safety_ratings', None)!r}")
+        parts = cand.content.parts
+        if not parts:
+            print(f"[Gemini] Candidate has no parts. finish_reason={finish_reason!r}")
     except Exception as exc:
         print(f"[Gemini] Could not parse response: {exc!r}")
         return "", []
