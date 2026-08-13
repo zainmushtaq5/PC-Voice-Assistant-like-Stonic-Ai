@@ -99,7 +99,7 @@ def _route_intent(text):
     # whatsapp and send message to Y") must NOT be hijacked by a single regex
     # below — let them fall through to the LLM agent loop, which can chain
     # multiple tool calls together.
-    if re.search(r"\b(and then|,?\s+and\s+\w|\bthen\b)\s", t):
+    if re.search(r"\b(and|then)\b", t):
         return None
 
     # Window-level overview commands must be caught before the looser patterns
