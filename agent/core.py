@@ -354,29 +354,43 @@ def _find_json_object(text):
     return None
 
 
-def _extract_tool_call(content):
-    """Try to parse a JSON tool call that a model may have written as plain text
-    (instead of Ollama's native tool_calls field). Returns (name, args) or None."""
+def _extract_all_tool_calls(content):
+    """Parse one OR MORE JSON tool calls that a model wrote as plain text
+    (instead of native tool_calls). Handles concatenated objects like
+    '{"name": "a", ...} {"name": "b", ...}' by decoding them one at a time.
+    Returns a list of (name, args) tuples (possibly empty)."""
     if not content:
-        return None
+        return []
     text = content.strip()
     fenced = re.search(r"```(?:json)?\s*(.*?)```", text, re.DOTALL)
     if fenced:
-        candidates = [fenced.group(1).strip(), text]
-    else:
-        candidates = [text, _find_json_object(text)]
-    seen = set()
-    for candidate in candidates:
-        if not candidate or candidate in seen:
-            continue
-        seen.add(candidate)
+        text = fenced.group(1).strip()
+
+    calls = []
+    decoder = json.JSONDecoder()
+    i = 0
+    n = len(text)
+    while i < n:
+        # Skip whitespace/non-brace chars until the next plausible JSON start.
+        while i < n and text[i] != "{":
+            i += 1
+        if i >= n:
+            break
         try:
-            obj = json.loads(candidate)
+            obj, end = decoder.raw_decode(text, i)
         except Exception:
+            i += 1
             continue
         if isinstance(obj, dict) and "name" in obj:
-            return obj["name"], obj.get("arguments") or {}
-    return None
+            calls.append((obj["name"], obj.get("arguments") or {}))
+        i = end
+    return calls
+
+
+def _extract_tool_call(content):
+    """Backward-compatible single-call wrapper around _extract_all_tool_calls."""
+    calls = _extract_all_tool_calls(content)
+    return calls[0] if calls else None
 
 
 def _coerce_args(args):
@@ -584,13 +598,16 @@ class Agent:
             native_tool_calls = bool(response_msg.get("tool_calls"))
             tool_calls = list(response_msg.get("tool_calls") or [])
 
-            # Fallback: some local models write the tool call as JSON in content
-            # instead of using Ollama's native tool_calls field.
+            # Fallback: some local models write the tool call(s) as JSON in content
+            # instead of using native tool_calls. Handles one OR SEVERAL
+            # concatenated JSON objects (e.g. two tool calls back to back).
             if not tool_calls:
-                parsed = _extract_tool_call(content)
-                if parsed:
-                    name, args = parsed
-                    tool_calls = [{"function": {"name": name, "arguments": args}}]
+                parsed_calls = _extract_all_tool_calls(content)
+                if parsed_calls:
+                    tool_calls = [
+                        {"function": {"name": name, "arguments": args}}
+                        for name, args in parsed_calls
+                    ]
 
             # Blank-response guard: if the model returned nothing (no text AND no
             # tool call), drop the empty assistant message and retry instead of
